@@ -1,7 +1,7 @@
 ember-wo-push-updates-ws
 ==============================================================================
 
-[Short description of the addon.]
+This addon is the websocket version of [ember-wo-push-updates](https://github.com/redpencilio/ember-wo-push-updates)
 
 
 Compatibility
@@ -23,7 +23,7 @@ ember install ember-wo-push-updates-ws
 Usage
 ------------------------------------------------------------------------------
 
-[Longer description of how to use the addon in apps.]
+See the usage of [ember-wo-push-updates](https://github.com/redpencilio/ember-wo-push-updates)
 
 
 Contributing
