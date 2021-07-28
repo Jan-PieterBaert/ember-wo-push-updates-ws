@@ -19,28 +19,32 @@ export default class PushUpdatesWsService extends Service {
         });
     }
 
-    const l = window.location;
-    const socket = this.websockets.socketFor(
-      `${l.protocol === 'https:' ? 'wss://' : 'ws://'}${l.hostname}:3456`
-    );
-    socket.on('open', () => {
-      socket.send(JSON.stringify({ id: window.identifier }));
-    });
+    fetch('/push-update-ws', {
+      headers: { 'MU-TAB-ID': window.identifier },
+    })
+      // .then((response) => response.json())
+      .then((resp) => {
+        let url = resp.url.replace(/^http/, 'ws');
+        const socket = this.websockets.socketFor(url);
+        socket.on('open', () => {
+          socket.send(JSON.stringify({ id: window.identifier }));
+        });
 
-    socket.on('message', (event) => {
-      let eventData = JSON.parse(event.data);
-      let data = eventData.data,
-        type = eventData.type,
-        realm = eventData.realm;
-      for (let func of this.pollCallbackFunctions) {
-        func(data, type, realm);
-      }
-      console.log(`Received push update : ${JSON.stringify(eventData)}`);
-    });
+        socket.on('message', (event) => {
+          let eventData = JSON.parse(event.data);
+          let data = eventData.data,
+            type = eventData.type,
+            realm = eventData.realm;
+          for (let func of this.pollCallbackFunctions) {
+            func(data, type, realm);
+          }
+          console.log(`Received push update : ${JSON.stringify(eventData)}`);
+        });
 
-    socket.on('close', () => {
-      socket.reconnect();
-    });
+        socket.on('close', () => {
+          socket.reconnect();
+        });
+      });
   }
 
   addPollCallbackFunction(func) {
