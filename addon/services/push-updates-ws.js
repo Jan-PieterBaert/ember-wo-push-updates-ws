@@ -19,6 +19,7 @@ export default class PushUpdatesWsService extends Service {
         });
     }
 
+    // Should work with header, but doesn't yet so sends message on open
     fetch('/push-update-ws', {
       headers: { 'MU-TAB-ID': window.identifier },
     })
